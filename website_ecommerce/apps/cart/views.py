@@ -1,4 +1,16 @@
 from django.shortcuts import render
 
-def cart(request):
-    return render(request, 'cart.html')
+from .cart import Cart
+
+def cart_detail(request):
+    cart = Cart(request)
+
+    print(cart)
+
+    context = {
+        'cart': cart
+    }
+
+    return render(request, 'cart.html', context)
+
+
