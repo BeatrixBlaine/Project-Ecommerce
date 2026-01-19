@@ -22,7 +22,7 @@
             <div id="main-navbar" class="navbar-menu">
                 <div class="navbar-end">
                     {% for category in menu_categories %}
-                        <a url="{% url 'category_detail' category.slug %}" class="navbar-item">{{ category.title }}</a>
+                        <a href="{% url 'category_detail' category.slug %}" class="navbar-item">{{ category.title }}</a>
                     {% endfor %}
 
                     <div class="navbar-item">
