@@ -69,3 +69,6 @@ class Cart:
     def save(self):
         self.session[settings.CART_SESSION_ID] = self.cart
         self.session.modified = True
+
+    def get_total_length(self):
+        return sum(int(item['quantity']) for item in self.cart.values())
