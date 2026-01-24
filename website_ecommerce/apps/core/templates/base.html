@@ -57,8 +57,8 @@
         <script>
             var store = new Vuex.Store({
                 state: {
-                    numItems: {{ cart.get_total_length }},
-                    totalCost: {{ cart.get_total_cost }}
+                    numItems: {{ cart.get_total_length|default:'0' }},
+                    totalCost: {{ cart.get_total_cost|default:'0' }}
                 },
                 mutations: {
                     increment(state, quantity) {

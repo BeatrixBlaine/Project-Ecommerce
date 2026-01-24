@@ -7,6 +7,8 @@ from apps.cart.cart import Cart
 
 from .models import Product
 
+from apps.order.utils import checkout 
+
 def api_add_to_cart(request):
     data = json.loads(request.body)
     jsonresponse = {'success': True}
@@ -36,3 +38,22 @@ def api_remove_from_cart(request):
 
     return JsonResponse(jsonresponse)
     
+
+def api_checkout(request):
+    data = json.loads(request.body)
+    jsonresponse = {'success': True}
+    first_name = data['first_name']
+    last_name = data['last_name']
+    email = data['email']
+    address = data['address']
+    zipcode = data['zipcode']
+    place = data['place']
+
+    orderid = checkout(request, first_name, last_name, email, address, zipcode, place)
+
+    paid = True
+
+    if paid == True:
+        order = Order.objects.get(pk=orderid)
+
+    return JsonResponse(jsonresponse)

@@ -28,7 +28,7 @@ class Cart:
 
             item['quantity'] = quantity
             item['price'] = float(item.get('price') or 0)
-            item['total_price'] = item['price'] * quantity
+            item['total_price'] = item['price'] * item['quantity']
 
             yield item
 
@@ -74,4 +74,5 @@ class Cart:
         return sum(int(item['quantity']) for item in self.cart.values())
     
     def get_total_cost(self):
-        return sum(float(item['total_price']) for item in self.cart.values())
+        return sum(item['total_price'] for item in self)
+

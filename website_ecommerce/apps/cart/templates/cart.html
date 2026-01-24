@@ -36,6 +36,53 @@
                     </tfoot>
                 </table>
             </div>
+
+            <form v-on:submit.prevent="submitForm()">
+                <div class="field">
+                    <div class="control">
+                        <label>First Name</label>
+                        <input type="text" name="first_name" v-model="first_name">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="control">
+                        <label>Last Name</label>
+                        <input type="text" name="last_name" v-model="last_name">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="control">
+                        <label>E-mail</label>
+                        <input type="text" name="email" v-model="email">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="control">
+                        <label>Address</label>
+                        <input type="text" name="address" v-model="address">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="control">
+                        <label>Zip code</label>
+                        <input type="text" name="zipcode" v-model="zipcode">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="control">
+                        <label>Place</label>
+                        <input type="text" name="place" v-model="place">
+                    </div>
+                </div>
+                <div class="field">
+                    <button class="button is-primary">Check out</button>
+                </div>
+            </form>
         {% else %}
             <p>Your cart is empty!</p>
         {% endif %}
@@ -50,6 +97,12 @@
         store: store,
         data() {
             return {
+                first_name: '',
+                last_name: '',
+                email: '',
+                address: '',
+                zipcode: '',
+                place: '',
                 products: [{{ productsstring|safe }}]
             }
         },
@@ -62,6 +115,36 @@
             }
         },
         methods: {  
+            submitForm() {
+                console.log('Submit form');
+
+                var data = {
+                    'first_name': this.first_name,
+                    'last_name': this.last_name,
+                    'email': this.email,
+                    'address': this.address,
+                    'zipcode': this.zipcode,
+                    'place': this.place
+                };
+
+                fetch('/api/checkout/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    credentials: 'same-origin',
+                    body: JSON.stringify(data)
+                })
+                .then((response) => {
+                    console.log('Success');
+                    console.log(response);
+                })
+                .catch(function (error) {
+                    console.log('Error 2');
+                    console.log(error);
+                })
+            },
             incrementQuantity(product_id, quantity, price) {
                 console.log('Product_id:', product_id);
 
