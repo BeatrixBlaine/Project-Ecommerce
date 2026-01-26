@@ -3,7 +3,7 @@ import os
 
 from random import randint
 
-from apps.cart import Cart 
+from apps.cart.cart import Cart 
 from apps.order.models import Order, OrderItem
 
 def checkout(request, first_name, last_name, email, address, zipcode, place):
