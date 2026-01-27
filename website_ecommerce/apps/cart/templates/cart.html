@@ -90,6 +90,18 @@
             <p>Your cart is empty!</p>
         {% endif %}
 
+        <div v-if="errors.length > 0">
+            <article class="message is-danger" v-for="error in errors">
+                <div class="message-header">
+                    <p>Error</p>
+                </div>
+                
+                <div class="message-body">
+                    [[ error ]]
+                </div>
+            </article>
+        </div>
+
         <button @click="buy()">Check out</button>
     </div>
 {% endblock %}
@@ -103,6 +115,7 @@
         store: store,
         data() {
             return {
+                errors: [],
                 first_name: '',
                 last_name: '',
                 email: '',
@@ -122,30 +135,70 @@
         },
         methods: {  
             buy() {
-                var stripe = Stripe('{{ pub_key }}');
+                var data = {
+                    'first_name': this.first_name,
+                    'last_name': this.last_name,
+                    'email': this.email,
+                    'address': this.address,
+                    'zipcode': this.zipcode,
+                    'place': this.place
+                };
 
-                fetch('/api/create_checkout_session/', {
-                        method: 'POST',
-                        headers: {
-                            'Content-type': 'application/json',
-                            'X-CSRFToken': '{{ csrf_token }}'
-                        },
-                        credentials: 'same-origin'
-                })
-                .then(function(response) {
-                    return response.json()
-                })
-                .then(function(session) {
-                    return stripe.redirectToCheckout({ sessionId: session.session.id })
-                })
-                .then(function(result) {
-                    if (result.error) {
-                        alert(result.error.message)
-                    }
-                })
-                .catch(function(error) {
-                    console.log('Error:', error);
-                });
+                this.errors = [];
+
+                if (data.first_name === '') {
+                    this.errors.push('First name is empty');
+                }
+
+                if (data.last_name === '') {
+                    this.errors.push('Last name is empty');
+                }
+
+                if (data.email === '') {
+                    this.errors.push('Email is empty');
+                }
+
+                if (data.address === '') {
+                    this.errors.push('Address is empty');
+                }
+
+                if (data.zipcode === '') {
+                    this.errors.push('Zip Code is empty');
+                }
+
+                if (data.place === '') {
+                    this.errors.push('Place is empty');
+                }
+
+                if (this.errors.length === 0) {
+
+                    var stripe = Stripe('{{ pub_key }}');
+
+                    fetch('/api/create_checkout_session/', {
+                            method: 'POST',
+                            headers: {
+                                'Content-type': 'application/json',
+                                'X-CSRFToken': '{{ csrf_token }}'
+                            },
+                            credentials: 'same-origin',
+                            body: JSON.stringify(data)
+                    })
+                    .then(function(response) {
+                        return response.json()
+                    })
+                    .then(function(session) {
+                        return stripe.redirectToCheckout({ sessionId: session.session.id })
+                    })
+                    .then(function(result) {
+                        if (result.error) {
+                            alert(result.error.message)
+                        }
+                    })
+                    .catch(function(error) {
+                        console.log('Error:', error);
+                    });
+
+                }
             },
 
             submitForm() {

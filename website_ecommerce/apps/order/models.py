@@ -15,6 +15,9 @@ class Order(models.Model):
     paid = models.BooleanField(default=False)
     paid_amount = models.FloatField(blank=True, null=True)
 
+    payment_intent = models.CharField(max_length=255, blank=True, null=True)
+
+
     def __str__(self):
         return '%s' % self.first_name
     

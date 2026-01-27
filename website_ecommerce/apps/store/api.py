@@ -13,7 +13,6 @@ from .models import Product
 from apps.order.utils import checkout 
 from apps.order.models import Order
 
-@csrf_exempt
 def create_checkout_session(request):
     cart = Cart(request)
 
@@ -45,11 +44,64 @@ def create_checkout_session(request):
         cancel_url='http://127.0.0.1:8000/cart/'
     )
 
+    # Create Order
+
+    data = json.loads(request.body)
+    first_name = data['first_name']
+    last_name = data['last_name']
+    email = data['email']
+    address = data['address']
+    zipcode = data['zipcode']
+    place = data['place']
+    payment_intent = session.payment_intent
+
+    orderid = checkout(request, first_name, last_name, email, address, zipcode, place)
+
+    total_price = 0.00
+
+    for item in cart:
+        product = item['product']
+        total_price = total_price + (float(product.price) * int(item['quantity']))
+
+
+    order = Order.objects.get(pk=orderid)
+    order.payment_intent = payment_intent
+    order.paid_amount = total_price
+    order.save()
+
+    # 
+
     return JsonResponse({
         'session': {
             'id': session.id
         }
     })
+
+def api_checkout(request):
+    cart = Cart(request)
+
+    data = json.loads(request.body)
+    jsonresponse = {'success': True}
+    first_name = data['first_name']
+    last_name = data['last_name']
+    email = data['email']
+    address = data['address']
+    zipcode = data['zipcode']
+    place = data['place']
+
+    orderid = checkout(request, first_name, last_name, email, address, zipcode, place)
+
+    paid = True
+
+    if paid == True:
+        order = Order.objects.get(pk=orderid)
+        order.paid = True
+        order.paid_amount = cart.get_total_cost()
+        order.save()
+
+        cart.clear()
+
+    return JsonResponse(jsonresponse)
 
 def api_add_to_cart(request):
     data = json.loads(request.body)
@@ -80,29 +132,3 @@ def api_remove_from_cart(request):
 
     return JsonResponse(jsonresponse)
     
-
-def api_checkout(request):
-    cart = Cart(request)
-
-    data = json.loads(request.body)
-    jsonresponse = {'success': True}
-    first_name = data['first_name']
-    last_name = data['last_name']
-    email = data['email']
-    address = data['address']
-    zipcode = data['zipcode']
-    place = data['place']
-
-    orderid = checkout(request, first_name, last_name, email, address, zipcode, place)
-
-    paid = True
-
-    if paid == True:
-        order = Order.objects.get(pk=orderid)
-        order.paid = True
-        order.paid_amount = cart.get_total_cost()
-        order.save()
-
-        cart.clear()
-
-    return JsonResponse(jsonresponse)
