@@ -89,10 +89,13 @@
         {% else %}
             <p>Your cart is empty!</p>
         {% endif %}
+
+        <button @click="buy()">Check out</button>
     </div>
 {% endblock %}
 
 {% block scripts %}
+<script type="application/javascript" src="https://js.stripe.com/v3/"></script>
 <script>
     var productapp = new Vue({
         el: '#cartapp',
@@ -118,6 +121,33 @@
             }
         },
         methods: {  
+            buy() {
+                var stripe = Stripe('{{ pub_key }}');
+
+                fetch('/api/create_checkout_session/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-type': 'application/json',
+                            'X-CSRFToken': '{{ csrf_token }}'
+                        },
+                        credentials: 'same-origin'
+                })
+                .then(function(response) {
+                    return response.json()
+                })
+                .then(function(session) {
+                    return stripe.redirectToCheckout({ sessionId: session.session.id })
+                })
+                .then(function(result) {
+                    if (result.error) {
+                        alert(result.error.message)
+                    }
+                })
+                .catch(function(error) {
+                    console.log('Error:', error);
+                });
+            },
+
             submitForm() {
                 console.log('Submit form');
 
