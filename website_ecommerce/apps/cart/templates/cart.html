@@ -34,6 +34,11 @@
                             <td></td>
                             <td>[[ totalCost ]]</td>
                         </tr>
+
+                        <tr v-if="coupon_value">
+                            <td colspan="3">Total cost with coupon:</td>
+                            <td>[[ totalCostWithCoupon ]]</td>
+                        </tr>
                     </tfoot>
                 </table>
             </div>
@@ -122,7 +127,9 @@
                 address: '',
                 zipcode: '',
                 place: '',
-                products: [{{ productsstring|safe }}]
+                products: [{{ productsstring|safe }}],
+                coupon_value: 0,
+                coupon_code: ''
             }
         },
         computed: {
@@ -131,6 +138,13 @@
             },
             totalCost: function() {
                 return store.state.totalCost;
+            },
+            totalCostWithCoupon: function() {
+                if (this.coupon_value > 0) {
+                    return store.state.totalCost * (parseInt(this.coupon_value) / 100);
+                } else {
+                    return store.state.totalCost;
+                }
             }
         },
         methods: {  

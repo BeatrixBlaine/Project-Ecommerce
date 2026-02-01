@@ -28,7 +28,7 @@ def webhook(request):
 
         print('Payment intent:', payment_intent.id)
 
-        order = Order.objects.get(payment_intent = payment_intent.id)
+        order = Order.objects.get(payment_intent=payment_intent.id)
         order.paid = True
         order.save()
 

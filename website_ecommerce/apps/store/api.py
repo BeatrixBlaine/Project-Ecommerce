@@ -53,6 +53,7 @@ def create_checkout_session(request):
     address = data['address']
     zipcode = data['zipcode']
     place = data['place']
+
     payment_intent = session.payment_intent
 
     orderid = checkout(request, first_name, last_name, email, address, zipcode, place)
@@ -63,19 +64,21 @@ def create_checkout_session(request):
         product = item['product']
         total_price = total_price + (float(product.price) * int(item['quantity']))
 
-
     order = Order.objects.get(pk=orderid)
-    order.payment_intent = payment_intent
+    order.payment_intent = payment_intent or '' ## SEMENTARA BEGINI BIAR JALAN           ANJING
     order.paid_amount = total_price
     order.save()
 
     # 
 
-    return JsonResponse({
-        'session': {
-            'id': session.id
-        }
-    })
+    return JsonResponse({'session': session})
+
+
+    # return JsonResponse({
+    #    'session': {
+    #        'id': session.id
+    #    }
+    #})
 
 def api_checkout(request):
     cart = Cart(request)
