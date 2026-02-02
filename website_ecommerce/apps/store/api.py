@@ -12,8 +12,25 @@ from .models import Product
 
 from apps.order.utils import checkout 
 from apps.order.models import Order
+from apps.coupon.models import Coupon
 
 def create_checkout_session(request):
+    data = json.loads(request.body)
+
+    # Coupon
+
+    coupon_code = data['coupon_code']
+    coupon_value = 0
+
+    if coupon_code != '':
+        coupon = Coupon.objects.get(code=coupon_code)
+
+        if coupon.can_use():
+            coupon_value = coupon.value
+            coupon.use()
+
+    #
+
     cart = Cart(request)
 
     stripe.api_key = settings.STRIPE_API_KEY_HIDDEN
@@ -23,13 +40,18 @@ def create_checkout_session(request):
     for item in cart:
         product = item['product']
 
+        price = int(product.price * 100)
+
+        if coupon_value > 0:
+            price = int(price * (int(coupon_value) / 100))
+
         obj = {
             'price_data': {
                 'currency': 'usd',
                 'product_data':{
                     'name': product.title
                 },
-                'unit_amount': int(product.price * 100)
+                'unit_amount': price
             },
             'quantity': item['quantity']
         }
@@ -46,14 +68,12 @@ def create_checkout_session(request):
 
     # Create Order
 
-    data = json.loads(request.body)
     first_name = data['first_name']
     last_name = data['last_name']
     email = data['email']
     address = data['address']
     zipcode = data['zipcode']
     place = data['place']
-
     payment_intent = session.payment_intent
 
     orderid = checkout(request, first_name, last_name, email, address, zipcode, place)
@@ -64,9 +84,13 @@ def create_checkout_session(request):
         product = item['product']
         total_price = total_price + (float(product.price) * int(item['quantity']))
 
+    if coupon_value > 0:
+        total_price = total_price * (coupon_value / 100)
+
     order = Order.objects.get(pk=orderid)
     order.payment_intent = payment_intent or '' ## SEMENTARA BEGINI BIAR JALAN           ANJING
     order.paid_amount = total_price
+    order.used_coupon = coupon_code
     order.save()
 
     # 

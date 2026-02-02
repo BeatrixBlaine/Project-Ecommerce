@@ -42,7 +42,7 @@ urlpatterns = [
     path('api/add_to_cart/', api_add_to_cart, name='api_add_to_cart'),
     path('api/remove_from_cart/', api_remove_from_cart, name='api_remove_from_cart'),
     path('api/checkout/', api_checkout, name='api_checkout'),
-    path('api/can_use', api_can_use, name='api_can_use'),
+    path('api/can_use/', api_can_use, name='api_can_use'),
     
     # Store 
 
