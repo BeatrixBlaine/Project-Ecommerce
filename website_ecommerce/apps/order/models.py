@@ -17,6 +17,8 @@ class Order(models.Model):
     used_coupon = models.CharField(max_length=50, blank=True, null=True)
 
     payment_intent = models.CharField(max_length=255)
+    stripe_checkout_id = models.CharField(max_length=255, blank=True, null=True, unique=True)
+
     # blank=True, null=True
 
     def __str__(self):

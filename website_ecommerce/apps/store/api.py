@@ -74,7 +74,6 @@ def create_checkout_session(request):
     address = data['address']
     zipcode = data['zipcode']
     place = data['place']
-    payment_intent = session.payment_intent
 
     orderid = checkout(request, first_name, last_name, email, address, zipcode, place)
 
@@ -88,9 +87,10 @@ def create_checkout_session(request):
         total_price = total_price * (coupon_value / 100)
 
     order = Order.objects.get(pk=orderid)
-    order.payment_intent = payment_intent or '' ## SEMENTARA BEGINI BIAR JALAN           ANJING
+    # order.payment_intent = payment_intent # or '' ## SEMENTARA BEGINI BIAR JALAN           ANJING
     order.paid_amount = total_price
     order.used_coupon = coupon_code
+    order.stripe_checkout_id = session.id
     order.save()
 
     # 

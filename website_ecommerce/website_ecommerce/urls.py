@@ -30,7 +30,7 @@ from apps.store.api import api_add_to_cart, api_remove_from_cart, api_checkout, 
 urlpatterns = [
     path('', frontpage, name='frontpage'),
     path('cart/', cart_detail, name='cart'),
-    path('hooks/', webhook, name='webhook'),
+    path('webhook/', webhook, name='webhook'),
     path('cart/success/', success, name='success'),
     path('contact/', contact, name='contact'),
     path('about/', about, name='about'),

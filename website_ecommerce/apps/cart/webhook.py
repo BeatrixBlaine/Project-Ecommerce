@@ -23,14 +23,31 @@ def webhook(request):
     except ValueError as e:
         return HttpResponse(status=400)
     
-    if event.type == 'payment_intent.succeeded':
-        payment_intent = event.data.object
 
-        print('Payment intent:', payment_intent.id)
+    if event.type == 'checkout.session.completed':
+        session = event.data.object
 
-        order = Order.objects.get(payment_intent=payment_intent.id)
-        order.paid = True
-        order.save()
+        try:
+            order = Order.objects.get(stripe_checkout_id=session.id)
+            order.payment_intent = session.payment_intent
+            order.paid = True
+            order.save()
+            print('Payment completed:', session.payment_intent)
+        except Order.DoesNotExist:
+            print('Order not found for session', session.id)
 
     return HttpResponse(status=200)
+    
+#    if event.type == 'checkout':
+#      payment_intent = event.data.object
+#
+ #       print('Payment Intent : ', payment_intent.id)
+  #      order = Order.objects.get(payment_intent=payment_intent.id)
+#
+#
+#        order.payment_intent = payment_intent.id
+#        order.paid = True
+#        order.save()
+#
+#    return HttpResponse(status=200)
 
