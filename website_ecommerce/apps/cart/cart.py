@@ -74,10 +74,7 @@ class Cart:
         return sum(int(item['quantity']) for item in self.cart.values())
     
     def get_total_cost(self):
-        try:
-            return sum(item['total_price'] for item in self)
-        except Exception:
-            return 0
+        return sum(item['total_price'] for item in self)
     
     def clear(self):
         del self.session[settings.CART_SESSION_ID]

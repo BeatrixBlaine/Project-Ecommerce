@@ -3,6 +3,16 @@ from django.db import models
 from apps.store.models import Product
 
 class Order(models.Model):
+    ORDERED = 'ordered'
+    SHIPPED = 'shipped'
+    ARRIVED = 'arrived'
+
+    STATUS_CHOICES = (
+        (ORDERED, 'Ordered'),
+        (SHIPPED, 'Shipped'),
+        (ARRIVED, 'Arrived')
+    )
+
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     email = models.CharField(max_length=100)
@@ -18,6 +28,9 @@ class Order(models.Model):
 
     payment_intent = models.CharField(max_length=255)
     stripe_checkout_id = models.CharField(max_length=255, blank=True, null=True, unique=True)
+
+    shipped_date = models.DateTimeField(blank=True, null=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=ORDERED)
 
     # blank=True, null=True
 
