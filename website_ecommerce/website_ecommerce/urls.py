@@ -22,7 +22,7 @@ from django.contrib.sitemaps.views import sitemap
 
 from apps.cart.webhook import webhook
 from apps.cart.views import cart_detail, success
-from apps.core.views import frontpage, contact, about
+from apps.core.views import frontpage, contact, about, order_confirmation
 from apps.store.views import product_detail, category_detail, search
 
 from apps.coupon.api import api_can_use
@@ -34,6 +34,7 @@ sitemaps = {'static': StaticViewSitemap, 'product': ProductSitemap, 'category': 
 
 urlpatterns = [
     path('', frontpage, name='frontpage'),
+    path('order_confirmation/', order_confirmation, name='order_confirmation'),
     path('search/', search, name='search'),
     path('cart/', cart_detail, name='cart'),
     path('webhook/', webhook, name='webhook'),
