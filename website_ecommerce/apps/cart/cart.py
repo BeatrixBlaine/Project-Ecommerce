@@ -60,6 +60,12 @@ class Cart:
 
         self.save()
 
+    def has_product(self, product_id):
+        if str(product_id) in self.cart:
+            return True
+        else:
+            return False
+
     def remove(self, product_id):
         product_id = str(product_id)
         if product_id in self.cart:

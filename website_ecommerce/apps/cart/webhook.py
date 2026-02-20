@@ -36,6 +36,11 @@ def webhook(request):
         except Order.DoesNotExist:
             print('Order not found for session', session.id)
 
+        for item in order.items.all():
+            product = item.product
+            product.num_available = product.num_available - item.quantity
+            product.save()
+
     return HttpResponse(status=200)
     
 #    if event.type == 'checkout':
