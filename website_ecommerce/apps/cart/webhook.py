@@ -43,8 +43,9 @@ def webhook(request):
             product.num_available = product.num_available - item.quantity
             product.save()
 
-        html = render_to_string('order_sent.html', {'order': order})
-        send_mail('Order Confirmation', 'Your order is successful!', 'noreply@icadgadgets.com', ['muhammadirsyadibrahim21@gmail.com', order.email], fail_silently=False, html_message=html)
+        html = render_to_string('order_confirmation.html', {'order': order})
+        send_mail('Order Confirmation', 'Your order is ' \
+        '', 'noreply@icadgadgets.com', ['muhammadirsyadibrahim21@gmail.com', order.email], fail_silently=False, html_message=html)
 
     return HttpResponse(status=200)
     

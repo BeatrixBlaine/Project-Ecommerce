@@ -44,6 +44,26 @@
                     <div class="navbar-item">
                         <a href="{% url 'cart' %}" class="button is-primary">Cart ([[ numItems ]])</a>
                     </div>
+
+                    {% if request.user.is_authenticated %}
+                        <div class="navbar-item">
+                            <a href="{% url 'myaccount' %}" class="button is-light">My Account</a>
+
+                            <!--  <form method="post" action="{% url 'logout' %}" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="button is-danger">
+                                    Log out
+                                </button>
+                            </form> -->
+                        </div>
+                    {% else %}
+                        <div class="navbar-item">
+                            <div class="buttons">
+                                <a href="{% url 'signup' %}" class="button is-primary"><strong>Sign Up</strong></a>
+                                <a href="{% url 'login' %}" class="button is-light">Log In</a>
+                            </div>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </nav>
