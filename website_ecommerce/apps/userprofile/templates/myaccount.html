@@ -3,7 +3,11 @@
 {% block content %}
     <h1 class="title">My Account</h1>
 
-    <a href="{% url 'logout' %}" class="button is-danger">Log out</a>
+    <!-- <a href="{% url 'logout' %}" class="button is-danger">Log out</a> -->
+    <form method="POST" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit" class="button is-danger">Log out</button>
+    </form>
 
     <hr>
 

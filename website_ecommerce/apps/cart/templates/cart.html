@@ -57,10 +57,17 @@
 
                 <input type="hidden" v-model="coupon_value"><br>
 
-                Coupon Code:<br>
-                <input type="text" v-model="coupon_code"><br>
+                <label>Coupon Code</label>
 
-                <button @click="applyCoupon()">Apply</button>
+                <div class="field has-addons">
+                    <div class="control">
+                        <input type="text" v-model="coupon_code" class="input">
+                    </div>
+
+                    <div class="control">
+                        <button @click="applyCoupon()" class="button is-success">Apply</button>
+                    </div>
+                </div>
 
                 <hr>
             </div>
@@ -71,6 +78,7 @@
                 <hr>
             {% endif %}
             <form v-on:submit.prevent="buy()">
+                <h2 class="title">Contact Information</h2>
                 <div class="field">
                     <div class="control">
                         <label>First Name</label>
@@ -102,7 +110,7 @@
                 <div class="field">
                     <div class="control">
                         <label>Zip code</label>
-                        <input type="text" name="zipcode" v-model="zipcode">
+                        <input type="text" n ame="zipcode" v-model="zipcode">
                     </div>
                 </div>
 
