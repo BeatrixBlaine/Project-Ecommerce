@@ -105,6 +105,14 @@
                 The product was added to the cart!
             </div>
         </article>
+
+        <hr>
+
+        <h2 class="subtitle">Related Products</h2>
+
+        {% with related_products as list_products %}
+            {% include 'parts/product_list.html' %}
+        {% endwith %}
     </div>
 {% endblock %}
 
