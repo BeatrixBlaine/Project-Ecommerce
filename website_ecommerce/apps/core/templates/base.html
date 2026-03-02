@@ -7,6 +7,7 @@
         <title>{% block title %}Icad Gadget{% endblock %}</title>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
         <link rel="stylesheet" href="{% static 'main.css' %}">
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 
     </head>
     
@@ -74,6 +75,8 @@
             {% endblock %}
         </section>
 
+        {% include 'parts/newsletter.html' %}
+
         <footer class="footer">
             <div class="columns">
                 <div class="column is-4">
@@ -87,7 +90,6 @@
             </div>
         </footer>
 
-        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
         <script src="https://unpkg.com/vuex@4.1.0/dist/vuex.global.js"></script>
         <script>
             var store = new Vuex.Store({

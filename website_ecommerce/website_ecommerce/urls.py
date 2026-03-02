@@ -29,6 +29,7 @@ from apps.userprofile.views import signup, myaccount
 
 from apps.coupon.api import api_can_use
 from apps.store.api import api_add_to_cart, api_remove_from_cart, api_checkout, create_checkout_session
+from apps.newsletter.api import api_add_subcriber
 
 from .sitemaps import StaticViewSitemap, CategorySitemap, ProductSitemap
 
@@ -60,6 +61,7 @@ urlpatterns = [
     path('api/remove_from_cart/', api_remove_from_cart, name='api_remove_from_cart'),
     path('api/checkout/', api_checkout, name='api_checkout'),
     path('api/can_use/', api_can_use, name='api_can_use'),
+    path('api/add_subscriber/', api_add_subcriber, name='api_add_subscriber'),
     
     # Store 
 
