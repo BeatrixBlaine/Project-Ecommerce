@@ -74,8 +74,9 @@ def create_checkout_session(request):
     address = data['address']
     zipcode = data['zipcode']
     place = data['place']
+    phone = data['phone']
 
-    orderid = checkout(request, first_name, last_name, email, address, zipcode, place)
+    orderid = checkout(request, first_name, last_name, email, address, zipcode, place, phone)
 
     total_price = 0.00
 
