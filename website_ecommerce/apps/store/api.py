@@ -69,7 +69,7 @@ def create_checkout_session(request):
     )
 
     # Create Order
-
+    
     orderid = checkout(request, data['first_name'], data['last_name'], data['email'], data['address'], data['zipcode'], data['place'], data['phone'])
 
     total_price = 0.00

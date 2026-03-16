@@ -39,7 +39,7 @@ SECRET_KEY = 'django-insecure-y%h*xjg*ho)!p2g%&+gialy*xzdsz2#kf0twg*g@8i9d1*xn%1
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['lymphocytic-chronoscopic-dionne.ngrok-free.dev', 'localhost', '127.0.0.1']
 
 EMAIL_HOST = 'localhost'
 EMAIL_PORT = 1025
