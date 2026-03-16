@@ -12,6 +12,7 @@ from .cart import Cart
 from apps.order.views import render_to_pdf
 
 from apps.order.models import Order
+from apps.store.utilities import decrement_product_quantity, send_order_confirmation
 
 @csrf_exempt
 def webhook(request):
@@ -40,27 +41,9 @@ def webhook(request):
         except Order.DoesNotExist:
             print('Order not found for session', session.id)
 
-        for item in order.items.all():
-            product = item.product
-            product.num_available = product.num_available - item.quantity
-            product.save()
+        decrement_product_quantity(order)
 
-        subject = 'Order confirmation'
-        from_email = 'noreply@icadgadgets.com'
-        to = ['muhammadirsyadibrahim21@gmail.com', order.email]
-        text_content = 'Your order is succesful!'
-        html_content = render_to_string('order_confirmation.html', {'order': order})
-
-
-        pdf = render_to_pdf('order_pdf.html', {'order': order})
-        msg = EmailMultiAlternatives(subject, text_content, from_email, to)
-        msg.attach_alternative(html_content, "text/html")
-
-        if pdf:
-            name = 'order_%s.pdf' % order.id
-            msg.attach(name, pdf, 'application/pdf')
-
-        msg.send()
+        send_order_confirmation(order)
 
 
         #html = render_to_string('order_confirmation.html', {'order': order})

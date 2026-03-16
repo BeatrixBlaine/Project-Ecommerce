@@ -14,6 +14,8 @@ from apps.order.utils import checkout
 from apps.order.models import Order
 from apps.coupon.models import Coupon
 
+from .utilities import decrement_product_quantity
+
 def create_checkout_session(request):
     data = json.loads(request.body)
 
@@ -68,15 +70,7 @@ def create_checkout_session(request):
 
     # Create Order
 
-    first_name = data['first_name']
-    last_name = data['last_name']
-    email = data['email']
-    address = data['address']
-    zipcode = data['zipcode']
-    place = data['place']
-    phone = data['phone']
-
-    orderid = checkout(request, first_name, last_name, email, address, zipcode, place, phone)
+    orderid = checkout(request, data['first_name'], data['last_name'], data['email'], data['address'], data['zipcode'], data['place'], data['phone'])
 
     total_price = 0.00
 
@@ -105,31 +99,6 @@ def create_checkout_session(request):
     #    }
     #})
 
-def api_checkout(request):
-    cart = Cart(request)
-
-    data = json.loads(request.body)
-    jsonresponse = {'success': True}
-    first_name = data['first_name']
-    last_name = data['last_name']
-    email = data['email']
-    address = data['address']
-    zipcode = data['zipcode']
-    place = data['place']
-
-    orderid = checkout(request, first_name, last_name, email, address, zipcode, place)
-
-    paid = True
-
-    if paid == True:
-        order = Order.objects.get(pk=orderid)
-        order.paid = True
-        order.paid_amount = cart.get_total_cost()
-        order.save()
-
-        cart.clear()
-
-    return JsonResponse(jsonresponse)
 
 def api_add_to_cart(request):
     data = json.loads(request.body)
