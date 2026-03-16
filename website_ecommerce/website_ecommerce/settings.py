@@ -41,6 +41,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['lymphocytic-chronoscopic-dionne.ngrok-free.dev', 'localhost', '127.0.0.1']
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://lymphocytic-chronoscopic-dionne.ngrok-free.dev"
+]
+
 EMAIL_HOST = 'localhost'
 EMAIL_PORT = 1025
 
