@@ -144,11 +144,9 @@
                     <div class="control">
                         <button class="button is-primary" v-on:click="buy('stripe')">Check out with Stripe</button>
                         <hr>
+                        <div id="paypal-button-container">
+                        </div>
                     </div>
-                </div>
-
-                <div id="paypal-button-container">
-
                 </div>
         </div>
             <p v-else>Your cart is empty!</p>
@@ -195,7 +193,7 @@
             }
         },
         mounted() {
-            const amount = this.totalCostWithCoupon.toFixed(2);
+            const amount = this.totalCostWithCoupon;
 
             paypal.Buttons({
                 onClick: () => {
