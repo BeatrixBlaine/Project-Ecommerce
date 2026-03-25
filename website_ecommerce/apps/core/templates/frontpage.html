@@ -19,4 +19,19 @@
             {% endwith %}
         {% endfor %}
     </div>
+
+    <hr>
+    <h2 class="subtitle has-text-centered">Popular products</h2>
+
+    {% with popular_products as list_products %}
+        {% include 'parts/product_list.html' %}
+    {% endwith %}
+
+    <hr>
+
+    <h2 class="subtitle has-text-centered">Recently Viewed</h2>
+
+    {% with recently_viewed_products as list_products %}
+        {% include 'parts/product_list.html' %}
+    {% endwith %}
 {% endblock %}
