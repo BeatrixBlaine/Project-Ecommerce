@@ -30,6 +30,9 @@ STRIPE_API_KEY_PUBLISHABLE = "pk_test_51SthwvE5n9ArJwBz9N7VPy0v3jgVYMdxsowplfsnM
 STRIPE_API_KEY_HIDDEN = "sk_test_51SthwvE5n9ArJwBzkI1TxACwMbXQEjsBT0fvGa31LhcMQo8WuDXoZaPVFt8efdI0XCviZR4ouTMxY1cihA8gN52r00D6y8tEXD"
 STRIPE_WEBHOOK_SECRET = "whsec_1988aff090bfd3ccf85f01b07a76c3de1414a7d5d0aab13e6bc40e3cfc8eda91"
 
+PAYPAL_API_KEY_PUBLISHABLE = "AfIca6dNlWNpdwZpQNjvFY4fObwKHIaQsLvUO3q3ntuLepZ7Id_zTBEYTlcMXS_zySktQes6fGWNVEFc"
+PAYPAL_API_KEY_HIDDEN = "ENjRuREN0gRROtFdp5BroJHW3J8sLZSFTdUDR5ZmJvLgTJU-29J9QeI_CuW63j0_uYmYtECDFCl3Ws4o"
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 

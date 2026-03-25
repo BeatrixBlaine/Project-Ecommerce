@@ -36,6 +36,7 @@ def cart_detail(request):
         'place': place,
         'phone': phone,
         'pub_key': settings.STRIPE_API_KEY_PUBLISHABLE,
+        'pub_key_paypal': settings.PAYPAL_API_KEY_PUBLISHABLE,
         'productsstring': productsstring
     }
 

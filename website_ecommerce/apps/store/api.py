@@ -2,9 +2,15 @@ import json
 import stripe
 
 from django.conf import settings
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.views.decorators.csrf import csrf_exempt
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from apps.store.utilities import decrement_product_quantity, send_order_confirmation
+
+from paypalcheckoutsdk.core import PayPalHttpClient, SandboxEnvironment
+from paypalcheckoutsdk.orders import OrdersCaptureRequest
 
 from apps.cart.cart import Cart
 
@@ -13,6 +19,7 @@ from .models import Product
 from apps.order.utils import checkout 
 from apps.order.models import Order
 from apps.coupon.models import Coupon
+from apps.order.views import render_to_pdf
 
 from .utilities import decrement_product_quantity
 
@@ -59,14 +66,11 @@ def create_checkout_session(request):
         }
 
         items.append(obj)
-
-    session = stripe.checkout.Session.create(
-        payment_method_types=['card'],
-        line_items=items,
-        mode='payment',
-        success_url='http://127.0.0.1:8000/cart/success/',
-        cancel_url='http://127.0.0.1:8000/cart/'
-    )
+    
+    gateway = data['gateway']
+    session = ''
+    payment_intent = ''
+    order_id = ''
 
     # Create Order
     
@@ -82,11 +86,45 @@ def create_checkout_session(request):
         total_price = total_price * (coupon_value / 100)
 
     order = Order.objects.get(pk=orderid)
+
+    # Stripe
+
+    if gateway == 'stripe':
+        session = stripe.checkout.Session.create(
+            payment_method_types=['card'],
+            line_items=items,
+            mode='payment',
+            success_url='http://127.0.0.1:8000/cart/success/',
+            cancel_url='http://127.0.0.1:8000/cart/'
+        )
+        order.stripe_checkout_id = session
+        order.paid_amount = total_price
+        order.used_coupon = coupon_code
+        order.save()
+
+    if gateway == 'paypal':
+        order_id = data['order_id']
+        
+        environtment = SandboxEnvironment(client_id=settings.PAYPAL_API_KEY_PUBLISHABLE, client_secret=settings.PAYPAL_API_KEY_HIDDEN)
+        client = PayPalHttpClient(environtment)
+
+        request = OrdersCaptureRequest(order_id)
+        response = client.execute(request)
+        order = Order.objects.get(pk=orderid)
+        order.paid_amount = total_price
+        order.used_coupon = coupon_code
+
+        if response.result.status == 'COMPLETED':
+            order.paid = True
+            order.payment_intent = order_id
+            order.save()
+
+            decrement_product_quantity(order)
+        else:
+            order.paid = False
+            order.save()
+
     # order.payment_intent = payment_intent # or '' ## SEMENTARA BEGINI BIAR JALAN           ANJING
-    order.paid_amount = total_price
-    order.used_coupon = coupon_code
-    order.stripe_checkout_id = session.id
-    order.save()
 
     # 
 
